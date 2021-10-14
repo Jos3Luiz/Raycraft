@@ -11,6 +11,8 @@ namespace RayCraft
         float rotation;
         Vector2 scale;
 
-    } Transform;
+    } RTransform;
+
+
 
 }
