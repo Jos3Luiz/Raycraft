@@ -63,7 +63,7 @@ namespace RayCraft
 
     void RBackgroundManager::Draw()
     {
-        Rectangle source={0,0,tileSize,tileSize};
+        Rectangle source={0,0,(float)tileSize,(float)tileSize};
         CellType index;
         Vector2 position;
 
