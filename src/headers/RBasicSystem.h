@@ -1,0 +1,5 @@
+
+/*
+Iterates over all Sprite Components ....
+*/
+void RenderSystem();

@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <bitset>
 #include <array>
@@ -10,88 +11,59 @@ namespace RayCraft
 {
     class REntity;
 
-
-    class ScopedEntity{
-    public:
-        ScopedEntity(REntity *e) : entityPtr(e){}
-        REntity * operator->(){
-            return entityPtr;
-        }
-        std::array<RComponentBase *,maxComponents> compPtrs;
+    struct ScopedEntity
+    {
+        ScopedEntity(REntity *e) : entityPtr(e) {}
+        std::array<RComponentBase *, maxComponents> compPtrs={0};
         std::bitset<maxComponents> compBitset;
-        bool canUpdate=false;
-
-    private:
-        REntity * entityPtr=nullptr;
+        bool canUpdate = false;
+        REntity *entityPtr = nullptr;
     };
-
 
     class REntity
     {
     public:
         EntityID entityIndex;
-        static std::vector<ScopedEntity> entityMetadata;
-
-        //adds its own metadata into array
-        REntity()
-        {
-            entityIndex = entityMetadata.size()-1;
-            entityMetadata.emplace_back(this);
-        }
-
-
-        // must destroy all of its childrens
-        virtual ~REntity()
-        {
-            REntity* replacedParent;
-            RComponentBase * replaced_ptr;
-            auto &meta = GetMetadata();
-            for(size_t i=0; i<meta.compPtrs.size();i++ ){
-                if(meta.compPtrs[i]){
+        inline static std::vector<ScopedEntity> entityMetadata;
         
-                    meta.compPtrs[i]=nullptr;
-                    meta.compBitset[i]=false;
-                    meta.compPtrs[i]->DeleteComponent(replacedParent,replaced_ptr);
-                    replacedParent->GetMetadata().compPtrs[i] = replaced_ptr;
+        // add copy constructor to take ownership of components
+        REntity();
+        ~REntity();
+        
 
-                }
-            }
-            entityMetadata[entityIndex]= entityMetadata.back();
-            entityMetadata.pop_back();
-        }
+        ScopedEntity &GetMetadata();
+        static std::vector<ScopedEntity>& GetMetadataList();
 
-        ScopedEntity &GetMetadata(){
-            return entityMetadata[entityIndex];
-        }
 
 
         template <typename T, typename... TArgs>
         void AddComponent(TArgs &&...mArgs)
         {
-            auto& compv = RComponentManager::GetComponents<T>();
+            auto &compv = RComponentManager::GetComponents<T>();
             compv.emplace_back(std::forward<TArgs>(mArgs)...);
 
             RComponentBase &comp = compv.back();
             comp.parentRef = this;
-            comp.id = compv.size()-1;
+            comp.id = compv.size() - 1;
 
             auto &meta = GetMetadata();
-            meta.compBitset[GetTypeId<T>()]=true;
+            meta.compBitset.set(GetTypeId<T>(),true);
+            meta.compPtrs[GetTypeId<T>()] = &compv.back();
         }
 
         template <typename T>
         inline bool HasComponent()
         {
-            return GetMetadata().compBitset[GetTypeId<T>()];
+            auto &meta = GetMetadata();
+            return meta.compBitset[GetTypeId<T>()];
         }
 
         template <typename T>
         T &GetComponent()
         {
             RComponentBase *ptr = GetMetadata().compPtrs[GetTypeId<T>()];
-            return static_cast<T>(&ptr);
+            return *static_cast<T*>(ptr);
         }
-
     };
 
 }
