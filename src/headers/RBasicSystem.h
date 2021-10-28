@@ -2,4 +2,4 @@
 /*
 Iterates over all Sprite Components ....
 */
-void RenderSystem();
+void RenderSystem(float dtime);

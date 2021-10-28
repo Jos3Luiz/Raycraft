@@ -11,7 +11,7 @@
 
 using namespace RayCraft;
 
-void RenderSystem(){
+void RenderSystem(float dtime){
     
     BeginDrawing();
     ClearBackground(RAYWHITE);
@@ -19,7 +19,8 @@ void RenderSystem(){
     for(auto &sprite : RComponentManager::GetComponents<RSprite>()){
         REntity *parent = sprite.parentRef;
         auto &transform = parent->GetComponent<RTransform>();
-        DrawTexture(sprite.tex,transform.location.x,transform.location.y,RAYWHITE);
+        sprite.Draw(transform.location);
+        //DrawTexture(sprite.tex,transform.location.x,transform.location.y,RAYWHITE);
     }
 
     EndDrawing();

@@ -14,6 +14,7 @@ RayEngine::RayEngine(unsigned width, unsigned height, const char *windownName, u
 
 void RayEngine::Mainloop()
 {
+    auto &entityMeta =  REntity::GetMetadataList();
 
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
@@ -21,8 +22,15 @@ void RayEngine::Mainloop()
         //ClearBackground(RAYWHITE);
 
         for (auto & systemUpdate : systemList){
-            systemUpdate();
+            systemUpdate(GetFrameTime());
         }
+        for(auto &e :entityMeta){
+            if(e.canUpdate){
+                e.entityPtr->Update(GetFrameTime());
+            }
+        }
+
+
 
         // BeginMode2D(camera);
 

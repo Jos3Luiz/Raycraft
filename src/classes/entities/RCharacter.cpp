@@ -1,4 +1,3 @@
-#include <iostream>
 #include "RCharacter.h"
 
 #include "components/RSprite.h"
@@ -6,7 +5,7 @@
 using namespace RayCraft;
 
 RCharacter::RCharacter(const char *sprites){
-    AddComponent<RSprite>(sprites);
+    AddComponent<RSprite>(sprites,5);
     AddComponent<RTransform>();
-    std::cout << "Rcharacter criado" << "\n";
+    //SetCanUpdate(true);
 }

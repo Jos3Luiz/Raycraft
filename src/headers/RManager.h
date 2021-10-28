@@ -35,13 +35,20 @@ public:
         delete REntity::GetMetadataList()[id].entityPtr;
     }
 
-    inline void SubscribeSystemUpdate(std::function<void()> fun)
+    inline void SubscribeSystemUpdate(std::function<void(float)> fun)
     {
         systemList.emplace_back(fun);
     }
 
+    inline void ClearLevel(){
+        auto &metaList =  REntity::GetMetadataList();
+        while (metaList.size()>0){
+            delete metaList[0].entityPtr;
+        }
+    }
+
 private:
-    std::vector<std::function<void()>> systemList;
+    std::vector<std::function<void(float)>> systemList;
     unsigned screenWidth;
     unsigned screenHeight;
 };

@@ -28,13 +28,14 @@ namespace RayCraft
         
         // add copy constructor to take ownership of components
         REntity();
-        ~REntity();
+        virtual ~REntity();
         
 
         ScopedEntity &GetMetadata();
         static std::vector<ScopedEntity>& GetMetadataList();
 
-
+        virtual void Update(float deltaTime){};
+        virtual void BeginPlay(){};
 
         template <typename T, typename... TArgs>
         void AddComponent(TArgs &&...mArgs)
@@ -64,6 +65,12 @@ namespace RayCraft
             RComponentBase *ptr = GetMetadata().compPtrs[GetTypeId<T>()];
             return *static_cast<T*>(ptr);
         }
+
+        void SetCanUpdate(bool canUpdate){
+            auto &meta = GetMetadata();
+            meta.canUpdate = canUpdate;
+        }
+
     };
 
 }

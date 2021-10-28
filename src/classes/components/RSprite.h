@@ -1,25 +1,34 @@
 #pragma once
+#include <unordered_map>
+#include <tuple>
+#include <string>
 #include "raylib.h"
 #include "RComponent.h"
 
-namespace RayCraft
+using namespace RayCraft;
+
+
+
+using TextureID = unsigned char;
+struct TexManager{
+    unsigned uses;
+    Texture2D tex;
+};
+
+class RSprite : public RComponent<RSprite>
 {
-    using TextureID  = unsigned char;
-    enum basicSprites
-    {
-        idle_front
-    };
+    inline static std::unordered_map<std::string, TexManager> map;
 
-    class RSprite : public RComponent<RSprite>
-    {
+public:
+    RSprite(const char *spritePath, TextureID spriteLenght = 1);
+    void Draw(Vector2 &position);
+    
+    void Draw(Vector3 &position);
+    
+    ~RSprite();
 
-    public:
-        RSprite(const char *spritePath);
-        ~RSprite();
-
-        Texture2D tex;
-        TextureID textIndex;
-
-    };
-
-} // namespace RayCraft
+    std::string path;
+    Texture2D tex;
+    TextureID textIndex=0;
+    TextureID len;
+};
