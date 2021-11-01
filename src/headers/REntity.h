@@ -71,6 +71,25 @@ namespace RayCraft
             meta.canUpdate = canUpdate;
         }
 
+        template <typename T>
+        static void OrderComponents(){
+            bool isInOrder=false;
+            auto &compv = RComponentManager::GetComponents<T>();
+            while(!isInOrder){
+                isInOrder = true;
+                for(ComponentID i=0;i < compv.size() - 1; i++){
+                    if(compv[i] > compv[i+1]){
+                        isInOrder=false;
+                        //swap
+                        //SwapComponents<T>(i,i+1);
+                    }
+                }
+            }
+        }
+
+        
+        
+
     };
 
 }

@@ -42,6 +42,7 @@ namespace RayCraft
         REntity *parentRef;
         ComponentID id;
         virtual void DeleteComponent(REntity *&replacedParent, RComponentBase *&replaced_ptr) = 0;
+        //virtual void SwapComponent(ComponentID other) = 0;
     };
 
     // CRTP, pass self as template argument in inheritance
@@ -59,6 +60,8 @@ namespace RayCraft
 
             RComponentManager::RemoveComponent<T>(id);
         };
+
+        
     };
 
 }
