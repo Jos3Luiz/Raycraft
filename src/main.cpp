@@ -6,9 +6,6 @@
 using namespace RayCraft;
 
 
-
-
-
 int main(void)
 {
     

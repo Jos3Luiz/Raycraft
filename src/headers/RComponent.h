@@ -1,10 +1,26 @@
 #pragma once
 #include <vector>
-#include "RUtils.h"
+
 
 namespace RayCraft
 {
     class REntity;
+    using ComponentID = unsigned;
+    using ComponentType = unsigned char;
+    constexpr ComponentType maxComponents = 32;
+
+    ComponentID GetID();
+
+    template <typename T>
+    const ComponentID GetTypeId()
+    {
+        static ComponentID typeId = GetID();
+        return typeId;
+    }
+
+
+
+
 
     class RComponentManager
     {
@@ -27,20 +43,10 @@ namespace RayCraft
         }
     };
 
-    ComponentID GetID();
-
-    template <typename T>
-    const ComponentID GetTypeId()
-    {
-        static ComponentID typeId = GetID();
-        return typeId;
-    }
-
     class RComponentBase
     {
     public:
         REntity *parentRef;
-        ComponentID id;
         virtual void DeleteComponent(REntity *&replacedParent, RComponentBase *&replaced_ptr) = 0;
         //virtual void SwapComponent(ComponentID other) = 0;
     };
@@ -57,8 +63,8 @@ namespace RayCraft
             replaced_ptr = this;
             auto &comps = RComponentManager::GetComponents<T>();
             replacedParent = comps.back().parentRef;
-
-            RComponentManager::RemoveComponent<T>(id);
+            ComponentID index = (static_cast<T *>(this)) - &RComponentManager::GetComponents<T>()[0];
+            RComponentManager::RemoveComponent<T>(index);
         };
 
         

@@ -7,35 +7,29 @@
 #include "RComponent.h"
 #include "raylib.h"
 
+using namespace RayCraft;
+
 namespace RayCraft
 {
-    class REntity;
-
-    struct ScopedEntity
-    {
-        ScopedEntity(REntity *e) : entityPtr(e) {}
+    using EntityID = unsigned;
+    class REntity{
+    public:
         std::array<RComponentBase *, maxComponents> compPtrs={0};
         std::bitset<maxComponents> compBitset;
-        bool canUpdate = false;
-        REntity *entityPtr = nullptr;
-    };
 
-    class REntity
-    {
-    public:
-        EntityID entityIndex;
-        inline static std::vector<ScopedEntity> entityMetadata;
+        REntity() = default;
+
+        REntity(REntity &other) = delete;
+        REntity& operator=(REntity &other) = delete;
+        ~REntity();
+
+        REntity& operator=(REntity &&other);
+        REntity(REntity &&other);
+
+
+
         
-        // add copy constructor to take ownership of components
-        REntity();
-        virtual ~REntity();
-        
-
-        ScopedEntity &GetMetadata();
-        static std::vector<ScopedEntity>& GetMetadataList();
-
-        virtual void Update(float deltaTime){};
-        virtual void BeginPlay(){};
+        size_t GetEntityId();
 
         template <typename T, typename... TArgs>
         void AddComponent(TArgs &&...mArgs)
@@ -45,51 +39,52 @@ namespace RayCraft
 
             RComponentBase &comp = compv.back();
             comp.parentRef = this;
-            comp.id = compv.size() - 1;
 
-            auto &meta = GetMetadata();
-            meta.compBitset.set(GetTypeId<T>(),true);
-            meta.compPtrs[GetTypeId<T>()] = &compv.back();
+            compBitset.set(GetTypeId<T>(),true);
+            compPtrs[GetTypeId<T>()] = &compv.back();
         }
 
         template <typename T>
         inline bool HasComponent()
         {
-            auto &meta = GetMetadata();
-            return meta.compBitset[GetTypeId<T>()];
+            return compBitset[GetTypeId<T>()];
         }
 
         template <typename T>
         T &GetComponent()
         {
-            RComponentBase *ptr = GetMetadata().compPtrs[GetTypeId<T>()];
-            return *static_cast<T*>(ptr);
-        }
-
-        void SetCanUpdate(bool canUpdate){
-            auto &meta = GetMetadata();
-            meta.canUpdate = canUpdate;
+            return *static_cast<T*>(compPtrs[GetTypeId<T>()]);
         }
 
         template <typename T>
-        static void OrderComponents(){
-            bool isInOrder=false;
-            auto &compv = RComponentManager::GetComponents<T>();
-            while(!isInOrder){
-                isInOrder = true;
-                for(ComponentID i=0;i < compv.size() - 1; i++){
-                    if(compv[i] > compv[i+1]){
-                        isInOrder=false;
-                        //swap
-                        //SwapComponents<T>(i,i+1);
-                    }
-                }
-            }
+        void DeleteComponent()
+        {
+            DeleteComponent(GetTypeId<T>());
         }
 
-        
+        void DeleteComponent(ComponentType typeComponent);
+
+
+    };
+
+
+
+
+    class REntityManager
+    {
+    public:
+        static REntity *GetEntity(EntityID entityIndex);
+        static void DestroyEntity(EntityID entityIndex);
+        static REntity *AddEntity(REntity &&entitydata);
+        static REntity *GetNewEntitySpace();
+        static size_t GetEntityIdByPtr(REntity *ptr);
+    private:
+        inline static std::vector<REntity> REntityList;
         
 
+    
+
+                
     };
 
 }
