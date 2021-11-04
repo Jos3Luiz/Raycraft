@@ -8,6 +8,8 @@ FILES = src/main.cpp \
 		src/classes/components/RSprite.cpp \
 		src/classes/entities/RCharacter.cpp \
 		\
+		src/classes/scripts/MovementScript.cpp \
+		\
 		src/classes/systems/RenderSystem.cpp 
 
 all: 

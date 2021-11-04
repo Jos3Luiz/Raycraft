@@ -7,13 +7,13 @@
 #include "RComponent.h"
 #include "raylib.h"
 
-using namespace RayCraft;
 
 namespace RayCraft
 {
     using EntityID = unsigned;
     class REntity{
     public:
+    
         std::array<RComponentBase *, maxComponents> compPtrs={0};
         std::bitset<maxComponents> compBitset;
 
@@ -28,7 +28,7 @@ namespace RayCraft
 
 
 
-        
+
         size_t GetEntityId();
 
         template <typename T, typename... TArgs>

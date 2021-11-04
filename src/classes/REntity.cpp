@@ -3,7 +3,6 @@
 #include <algorithm>
 using namespace RayCraft;
 
-// must destroy all of its childrens
 REntity::REntity(REntity &&other){
     compBitset = other.compBitset;
     for(size_t i = 0; i < compPtrs.size(); i++){
@@ -27,6 +26,7 @@ REntity& REntity::operator=(REntity &&other){
     return *this;
 }
 
+// must destroy all of its childrens
 REntity::~REntity()
 {
     for (size_t i = 0; i < compPtrs.size(); i++)
