@@ -15,7 +15,7 @@ struct TexManager{
     Texture2D tex;
 };
 
-class RSprite : public RComponent<RSprite>
+class RSprite : public RComponent
 {
     inline static std::unordered_map<std::string, TexManager> map;
 

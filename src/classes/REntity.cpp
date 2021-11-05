@@ -1,24 +1,28 @@
 #include "REntity.h"
 #include <assert.h>
 #include <algorithm>
+#include <typeinfo>
+#include <iostream>
 using namespace RayCraft;
 
 REntity::REntity(REntity &&other){
     compBitset = other.compBitset;
     for(size_t i = 0; i < compPtrs.size(); i++){
         if(other.compPtrs[i]){
-            other.compPtrs[i]->parentRef = this;
+            other.compPtrs[i]->SetParent(this);
         }
         compPtrs[i] = other.compPtrs[i];
         other.compPtrs[i] = nullptr;
     }
 }
 
+
 REntity& REntity::operator=(REntity &&other){
+    this->~REntity();
     compBitset = other.compBitset;
     for(size_t i = 0; i < compPtrs.size(); i++){
         if(other.compPtrs[i]){
-            other.compPtrs[i]->parentRef = this;
+            other.compPtrs[i]->SetParent(this);
         }
         compPtrs[i] = other.compPtrs[i];
         other.compPtrs[i] = nullptr;
@@ -26,34 +30,19 @@ REntity& REntity::operator=(REntity &&other){
     return *this;
 }
 
-// must destroy all of its childrens
+// virtual: must destroy all of its childrens throws error if doesnt
 REntity::~REntity()
 {
-    for (size_t i = 0; i < compPtrs.size(); i++)
-    {
-        DeleteComponent(i);
+    if (compBitset.any()==true){
+        std::cout << "[ERROR] destroying: " << typeid(this).name() << std::endl;
+        assert("must destroy all of its children");
     }
+
 }
 
 size_t REntity::GetEntityId(){
     return REntityManager::GetEntityIdByPtr(this);
 }
-
-
-void REntity::DeleteComponent(ComponentType typeComponent)
-{
-    assert(typeComponent < maxComponents && "typeComponent must be smaller than maxComponents");
-    REntity *replacedParent;
-    RComponentBase *replaced_ptr;
-    if (compPtrs[typeComponent])
-    {
-        compPtrs[typeComponent]->DeleteComponent(replacedParent, replaced_ptr);
-        replacedParent->compPtrs[typeComponent] = replaced_ptr;
-        compPtrs[typeComponent] = nullptr;
-        compBitset[typeComponent] = false;
-    }
-}
-
 
 
 

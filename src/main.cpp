@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "RManager.h"
-#include "RBasicSystem.h"
+#include "systems/RBasicSystem.h"
 
 #include "Entities/RCharacter.h"
 using namespace RayCraft;
@@ -18,6 +18,7 @@ int main(void)
 
     
     engine.SubscribeSystemUpdate(std::function<void(float)> (RenderSystem));
+    engine.SubscribeSystemUpdate(std::function<void(float)> (ScriptSystem));
     engine.Mainloop();
 
 

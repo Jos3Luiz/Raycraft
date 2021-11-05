@@ -4,7 +4,7 @@
 #include "raylib.h"
 using namespace RayCraft;
 
-class RTransform : public RComponent<RTransform>{
+class RTransform : public RComponent{
 
     public:
         Vector3 location {0.f,0.f,0.f};

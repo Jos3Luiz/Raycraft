@@ -18,6 +18,11 @@ namespace RayCraft
         return typeId;
     }
 
+    struct RComponent
+    {
+        REntity *parentRef;
+        virtual void SetParent(REntity *parent){ parentRef = parent;};
+    };
 
 
     class RComponentManager
@@ -31,36 +36,20 @@ namespace RayCraft
         }
 
         template <typename T>
-        static void RemoveComponent(RComponentBase *compPtr)
+        static void RemoveComponent(RComponent *compPtr,REntity *&entityChanged,RComponent *&newComp)
         {
             auto &compv = GetComponents<T>();
             ComponentID index = (static_cast<T *>(compPtr)) - &compv[0];
+            assert(index < compv.size() && "index must be smaller the list size when removing component");
             compv[index] = (T &&)(compv.back());
             compv.pop_back();
+            RComponent * moved = static_cast<RComponent *>(&compv[index]);
+            entityChanged=moved->parentRef;
+            newComp = moved;
         }
     };
 
-    class RComponentBase
-    {
-    public:
-        REntity *parentRef;
-        virtual void DeleteComponent(REntity *&replacedParent, RComponentBase *&replaced_ptr) = 0;
-    };
 
-    // CRTP, pass self as template argument in inheritance
-    class RComponent : public RComponentBase
-    {
-    public:
-        virtual void DeleteComponent(REntity *&replacedParent, RComponentBase *&replaced_ptr)
-        {
-            /*replaced_ptr = this;
-            auto &comps = RComponentManager::GetComponents<T>();
-            replacedParent = comps.back().parentRef;
-            ComponentID index = (static_cast<T *>(this)) - &RComponentManager::GetComponents<T>()[0];
-            RComponentManager::RemoveComponent<T>(index);*/
-        };
 
-        
-    };
 
 }

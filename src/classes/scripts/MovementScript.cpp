@@ -4,7 +4,7 @@
 #include "components/RTransform.h"
 
 void MovementScript::Update(float dtime){
-    RTransform &transform = parentRef->GetComponent<RTransform>();
+    RTransform &transform = parent->GetComponent<RTransform>();
     if (IsKeyDown(KEY_W)){
         transform.location.y+=dtime*speed;
     }

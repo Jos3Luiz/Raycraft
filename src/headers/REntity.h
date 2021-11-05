@@ -14,14 +14,14 @@ namespace RayCraft
     class REntity{
     public:
     
-        std::array<RComponentBase *, maxComponents> compPtrs={0};
+        std::array<RComponent *, maxComponents> compPtrs={0};
         std::bitset<maxComponents> compBitset;
 
         REntity() = default;
 
         REntity(REntity &other) = delete;
         REntity& operator=(REntity &other) = delete;
-        ~REntity();
+        virtual ~REntity();
 
         REntity& operator=(REntity &&other);
         REntity(REntity &&other);
@@ -32,16 +32,18 @@ namespace RayCraft
         size_t GetEntityId();
 
         template <typename T, typename... TArgs>
-        void AddComponent(TArgs &&...mArgs)
+        T* AddComponent(TArgs &&...mArgs)
         {
             auto &compv = RComponentManager::GetComponents<T>();
             compv.emplace_back(std::forward<TArgs>(mArgs)...);
 
-            RComponentBase &comp = compv.back();
-            comp.parentRef = this;
+            auto &comp = compv.back();
+            comp.SetParent(this);
 
             compBitset.set(GetTypeId<T>(),true);
             compPtrs[GetTypeId<T>()] = &compv.back();
+
+            return &comp;
         }
 
         template <typename T>
@@ -59,10 +61,21 @@ namespace RayCraft
         template <typename T>
         void DeleteComponent()
         {
-            DeleteComponent(GetTypeId<T>());
-        }
+            ComponentType typeComponent= GetTypeId<T>();
+            assert(typeComponent < maxComponents && "typeComponent must be smaller than maxComponents");
+            
+            RComponent *comp = compPtrs[typeComponent];
+            REntity *entityChanged;
+            RComponent *newComp;
 
-        void DeleteComponent(ComponentType typeComponent);
+            if (comp)
+            {
+                RComponentManager::RemoveComponent<T>(comp,entityChanged,newComp);
+                entityChanged->compPtrs[typeComponent] = newComp;
+                compPtrs[typeComponent] = nullptr;
+                compBitset[typeComponent] = false;
+            }
+        }
 
 
     };
