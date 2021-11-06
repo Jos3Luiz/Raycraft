@@ -6,7 +6,6 @@
 using namespace RayCraft;
 
 REntity::REntity(REntity &&other){
-    compBitset = other.compBitset;
     for(size_t i = 0; i < compPtrs.size(); i++){
         if(other.compPtrs[i]){
             other.compPtrs[i]->SetParent(this);
@@ -19,7 +18,6 @@ REntity::REntity(REntity &&other){
 
 REntity& REntity::operator=(REntity &&other){
     this->~REntity();
-    compBitset = other.compBitset;
     for(size_t i = 0; i < compPtrs.size(); i++){
         if(other.compPtrs[i]){
             other.compPtrs[i]->SetParent(this);
@@ -33,7 +31,7 @@ REntity& REntity::operator=(REntity &&other){
 // virtual: must destroy all of its childrens throws error if doesnt
 REntity::~REntity()
 {
-    if (compBitset.any()==true){
+    if (HasAnyComponents()){
         std::cout << "[ERROR] destroying: " << typeid(this).name() << std::endl;
         assert("must destroy all of its children");
     }

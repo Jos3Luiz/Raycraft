@@ -15,7 +15,6 @@ namespace RayCraft
     public:
     
         std::array<RComponent *, maxComponents> compPtrs={0};
-        std::bitset<maxComponents> compBitset;
 
         REntity() = default;
 
@@ -39,8 +38,6 @@ namespace RayCraft
 
             auto &comp = compv.back();
             comp.SetParent(this);
-
-            compBitset.set(GetTypeId<T>(),true);
             compPtrs[GetTypeId<T>()] = &compv.back();
 
             return &comp;
@@ -49,7 +46,7 @@ namespace RayCraft
         template <typename T>
         inline bool HasComponent()
         {
-            return compBitset[GetTypeId<T>()];
+            return compPtrs[GetTypeId<T>()]!=nullptr;
         }
 
         template <typename T>
@@ -73,8 +70,16 @@ namespace RayCraft
                 RComponentManager::RemoveComponent<T>(comp,entityChanged,newComp);
                 entityChanged->compPtrs[typeComponent] = newComp;
                 compPtrs[typeComponent] = nullptr;
-                compBitset[typeComponent] = false;
             }
+        }
+
+        inline bool HasAnyComponents(){
+            for(RComponent * c:compPtrs){
+                if(c){
+                    return true;
+                }
+            }
+            return false;
         }
 
 
