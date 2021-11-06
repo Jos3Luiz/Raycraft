@@ -7,11 +7,9 @@
 #include "components/RSprite.h"
 #include "components/Rtransform.h"
 
-
-
 using namespace RayCraft;
 
-void RenderSystem(float dtime){
+void RRenderSystem::Update(float dtime){
     
     BeginDrawing();
     ClearBackground(RAYWHITE);

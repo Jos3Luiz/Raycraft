@@ -2,6 +2,14 @@
 /*
 Iterates over all Sprite Components ....
 */
-void RenderSystem(float dtime);
+#include "RSystem.h"
+using namespace RayCraft;
 
-void ScriptSystem(float dtime);
+struct RRenderSystem : public RSystem{
+    virtual void Update(float dtime) override;
+};
+
+struct RScriptSystem : public RSystem{
+    //virtual void BeginPlay() override;
+    virtual void Update(float dtime) override;
+};

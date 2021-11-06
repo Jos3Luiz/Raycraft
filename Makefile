@@ -12,7 +12,7 @@ FILES = src/main.cpp \
 		\
 		src/classes/scripts/MovementScript.cpp \
 		\
-		src/classes/systems/RenderSystem.cpp \
+		src/classes/systems/RRenderSystem.cpp \
 		src/classes/systems/RScriptSystem.cpp \
 
 all: 

@@ -10,10 +10,14 @@ RayEngine::RayEngine(unsigned width, unsigned height, const char *windownName, u
 
 void RayEngine::Mainloop()
 {
+    for (auto & systemUpdate : systemList){
+        systemUpdate->BeginPlay();
+    }
+
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         for (auto & systemUpdate : systemList){
-            systemUpdate(GetFrameTime());
+            systemUpdate->Update(GetFrameTime());
         }
     }
 

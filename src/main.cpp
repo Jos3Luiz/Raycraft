@@ -17,8 +17,8 @@ int main(void)
     //Texture2D t2 = LoadTexture("resources/sprites/character.png");
 
     
-    engine.SubscribeSystemUpdate(std::function<void(float)> (RenderSystem));
-    engine.SubscribeSystemUpdate(std::function<void(float)> (ScriptSystem));
+    engine.SubscribeSystem<RRenderSystem>();
+    engine.SubscribeSystem<RScriptSystem>();
     engine.Mainloop();
 
 

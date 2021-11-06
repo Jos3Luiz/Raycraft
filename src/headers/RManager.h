@@ -6,7 +6,7 @@
 
 #include "Singleton.h"
 #include "REntity.h"
-
+#include "RSystem.h"
 using namespace RayCraft;
 
 
@@ -28,13 +28,16 @@ public:
         );
     }
 
-    inline void SubscribeSystemUpdate(std::function<void(float)> fun)
+    template <typename T, typename... TArgs>
+    T *SubscribeSystem(TArgs&&... mArgs)
     {
-        systemList.push_back(fun);
+        T * ptr=new T(mArgs...);
+        systemList.push_back(ptr);
+        return ptr;
     }
 
 
 
 private:
-    std::vector<std::function<void(float)>> systemList;
+    std::vector<RSystem *> systemList;
 };
