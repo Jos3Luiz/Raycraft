@@ -7,11 +7,11 @@
 
 using namespace RayCraft;
 
-RCharacter::RCharacter(const char *sprites){
+RCharacter::RCharacter(const char *sprites,bool useWASD){
     AddComponent<RSprite>(sprites,5);
     AddComponent<RTransform>();
     auto c=AddComponent<RScriptManager>();
-    c->AddScript<MovementScript>();
+    c->AddScript<MovementScript>(30.0f,useWASD);
 }
 
 RCharacter::~RCharacter(){

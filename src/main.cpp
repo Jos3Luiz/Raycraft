@@ -13,6 +13,8 @@ int main(void)
 
     engine.AddEntity<RCharacter>("resources/sprites/character.png");
 
+    engine.AddEntity<RCharacter>("resources/sprites/character.png",false);
+
     //Texture2D t1 = LoadTexture("resources/sprites/character.png");
     //Texture2D t2 = LoadTexture("resources/sprites/character.png");
 
