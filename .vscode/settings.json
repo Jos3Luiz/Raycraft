@@ -59,6 +59,9 @@
         "xlocnum": "cpp",
         "functional": "cpp",
         "list": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "queue": "cpp",
+        "set": "cpp",
+        "xtree": "cpp"
     }
 }
