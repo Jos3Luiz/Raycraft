@@ -1,30 +1,32 @@
-#include <iostream>
-#include "raylib.h"
+
 #include "core/Raycraft.h"
-#include "components/RSprite.h"
-#include "components/RTransform.h"
+#include "entities/player.h"
 #include "systems/RRenderSystem.h"
 
-EntityID CreatePlayer(raycraft::RayCraftEngine &e){
+
+
+using namespace raycraft;
+
+EntityID CreatePlayer(ECS::Engine &e){
     EntityID id = e.CreateEntity();
-    e.AddComponent<raycraft::RTransform2>(id);
-    e.AddComponent<raycraft::RSprite>(id,"resources/0.png");
+    e.AddComponent<RTransform2>(id);
+    e.AddComponent<RSprite>(id,"resources/0.png");
     return id;
 }
 
-void RegisterComponents(raycraft::RayCraftEngine &e){
-    e.RegisterComponent<raycraft::RTransform2>();
-    e.RegisterComponent<raycraft::RSprite>();
-    e.RegisterSystem<raycraft::RRenderSystem>();
+void RegisterComponents(ECS::Engine &e){
+    e.RegisterSystem<RRenderSystem>();
 }
 
 int main(void)
 {
 
     
-    raycraft::RayCraftEngine &e = raycraft::RayCraftEngine::instance();
-    
-    
+    RayCraftEngine e;  
+    e.RegisterSystem<RRenderSystem>();
+
+
+    Player p1;
 
     //e.BeginPlay();
     e.MainLoop();

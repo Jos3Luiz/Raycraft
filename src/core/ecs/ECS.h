@@ -10,6 +10,7 @@
 #include <utility>
 #include <list>
 #include <set>
+#include "../Singleton.h"
 #include "Config.h"
 
 namespace raycraft::ECS
@@ -103,7 +104,7 @@ namespace raycraft::ECS
         std::set<EntityID> entityList;
     };
 
-    class Engine
+    class Engine : public Singleton<Engine>
     {
     public:
         Engine();
