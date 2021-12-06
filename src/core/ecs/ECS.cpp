@@ -2,9 +2,15 @@
 
 namespace raycraft::ECS
 {
-    ComponentID GetID()
+    ComponentType GetID()
     {
-        static ComponentID id = 0;
+        static ComponentType id = 0;
+        return id++;
+    }
+
+    ComponentType GetSystemID()
+    {
+        static SystemType id = 0;
         return id++;
     }
 
@@ -36,7 +42,7 @@ namespace raycraft::ECS
     {
         for (auto &sys : systemsList)
         {
-            sys->BeginPlay();
+            if(sys) sys->BeginPlay();
         }
     }
 
@@ -44,7 +50,7 @@ namespace raycraft::ECS
     {
         for (auto &sys : systemsList)
         {
-            sys->Update(dtime);
+            if(sys) sys->Update(dtime);
         }
     }
 
@@ -81,6 +87,7 @@ namespace raycraft::ECS
     {
         for (auto &sys : systemsList)
         {
+            if(!sys) continue;
             // if signature doesnt matches anymore
             if ((sys->sig & signatureArray[id]) != sys->sig)
             {

@@ -12,11 +12,7 @@ namespace raycraft
             id = ECS::Engine::instance().CreateEntity();
         }
 
-        Entity(EntityID copied): id(copied){}
-
-        ~Entity(){
-            Destroy();
-        }       
+        Entity(EntityID copied): id(copied){}    
 
         template <typename T>
         T &GetComponent()
@@ -35,6 +31,7 @@ namespace raycraft
         T &AddScript(TArgs &&...mArgs)
         {
             ECS::Engine::instance().RegisterComponent<T>();
+            ECS::Engine::instance().RegisterSystem<RScriptSystem<T>>();
             return ECS::Engine::instance().AddComponent<T>(id,std::forward<TArgs>(mArgs)...);
         }
 
@@ -69,6 +66,7 @@ namespace raycraft
 
         void MainLoop()
         {
+            ECS_engine->BeginPlay();
 
             while (!WindowShouldClose()) // Detect window close button or ESC key
             {
@@ -83,13 +81,13 @@ namespace raycraft
         }
 
         Entity CreateEntity(){
-            return Entity( ECS::Engine::instance().CreateEntity() );
+            return Entity( ECS_engine->CreateEntity() );
         }
 
         template <typename T, typename... TArgs>
-        T &RegisterSystem(TArgs &&...mArgs)
+        void RegisterSystem(TArgs &&...mArgs)
         {
-            return ECS::Engine::instance().RegisterSystem<T>();
+            ECS_engine->RegisterSystem<T>(std::forward<TArgs>(mArgs)...);
         }
 
 

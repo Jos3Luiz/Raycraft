@@ -18,10 +18,19 @@ namespace raycraft::ECS
 
     using Signature = std::bitset<MAX_COMPONENTS_TYPE>;
 
-    ComponentID GetID();
+    ComponentType GetID();
+
+    SystemType GetSystemID();
 
     template <typename T>
     const ComponentID GetTypeId()
+    {
+        static ComponentID typeId = GetID();
+        return typeId;
+    }
+
+    template <typename T>
+    const SystemType GetSytemTypeId()
     {
         static ComponentID typeId = GetID();
         return typeId;
@@ -118,12 +127,13 @@ namespace raycraft::ECS
         void DestroyEntity(EntityID id);
 
         template <typename T, typename... TArgs>
-        T &RegisterSystem(TArgs &&...mArgs)
+        void RegisterSystem(TArgs &&...mArgs)
         {
-            auto sys = new T(std::forward<TArgs>(mArgs)...);
-            sys->engineRef = this;
-            systemsList.push_back(sys);
-            return *sys;
+            if (!systemsList[GetSytemTypeId<T>()]){
+                auto sys = new T(std::forward<TArgs>(mArgs)...);
+                systemsList [GetSytemTypeId<T>()] = sys;
+                sys->engineRef = this;
+            }
         }
 
         template <typename T>
@@ -147,7 +157,7 @@ namespace raycraft::ECS
         template <typename T>
         T &GetComponent(EntityID id)
         {
-            assert(signatureArray[id][GetTypeId<T>()] && "Component doesent exists");
+            assert(signatureArray[id][GetTypeId<T>()] && "Component doesnt exists");
             ComponentList<T> &compList = GetComponentList<T>();
 
             return compList.GetComponent(id);
@@ -175,7 +185,7 @@ namespace raycraft::ECS
         }
 
         std::array<IComponentList *, MAX_COMPONENTS_TYPE> componentListManager{};
-        std::vector<ISystem *> systemsList;
+        std::array<ISystem *,MAX_SYSTEMS> systemsList{};
         std::queue<EntityID> availableEntitiesIds;
         std::array<Signature, MAX_ENTITIES> signatureArray{};
     };

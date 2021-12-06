@@ -12,7 +12,7 @@ namespace raycraft{
     class RScriptSystem : public ECS::ISystem{
     
     public:
-        RRenderSystem(){
+        RScriptSystem(){
             SignComponent<T>();
         }
         virtual void BeginPlay() override {
@@ -27,10 +27,6 @@ namespace raycraft{
                 script.Update(dtime);
             }
         }
-
-
-
-
     };
 
 };
