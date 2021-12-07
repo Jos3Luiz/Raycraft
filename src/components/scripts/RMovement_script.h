@@ -1,7 +1,6 @@
 #pragma once
 
 #include "raylib.h"
-#include "core/ScriptSystem.h"
 #include "../RTransform.h"
 
 namespace raycraft{
@@ -15,7 +14,7 @@ namespace raycraft{
         : speed(playerSpeed){}
         
         void BeginPlay(){
-            playerTransform = &ECS::Engine::instance().GetComponent<RTransform2>(parentID);
+            playerTransform = &ECS::Engine::instance().GetComponent<RTransform3>(parentID);
         }
 
         void Update(float dtime){
@@ -27,7 +26,7 @@ namespace raycraft{
 
     private:
         float speed;
-        RTransform2 *playerTransform;
+        RTransform3 *playerTransform;
     };
 
 

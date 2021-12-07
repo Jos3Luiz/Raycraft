@@ -13,14 +13,15 @@ namespace raycraft{
     public:
         RRenderSystem(){
             SignComponent<RSprite>();
-            SignComponent<RTransform2>();
+            SignComponent<RTransform3>();
+            
         }
         virtual void BeginPlay() override {}
         virtual void Update(float dtime) override {
             for(EntityID e : entityList){
                 RSprite& sprite = engineRef->GetComponent<RSprite>(e);
-                RTransform2& transform = engineRef->GetComponent<RTransform2>(e);
-                sprite.Draw(transform.position);
+                RTransform3& transform = engineRef->GetComponent<RTransform3>(e);
+                sprite.Draw(transform.position.x,transform.position.y);
             }
         }
 

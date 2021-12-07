@@ -47,6 +47,7 @@ namespace raycraft::ECS
     public:
         virtual ~IComponentList(){};
         virtual void RemoveComponent(EntityID entity) = 0;
+        
     };
 
     template <typename T>
@@ -81,6 +82,10 @@ namespace raycraft::ECS
         inline ComponentID GetComponentId(EntityID parent)
         {
             return entityToComponent[parent];
+        }
+
+        inline std::vector<T>& GetComponentArray(){
+            return components;
         }
 
     private:
@@ -170,6 +175,11 @@ namespace raycraft::ECS
             signatureArray[id].set(GetTypeId<T>(), false);
             OnEntitySigChanged(id);
             componentListManager[GetTypeId<T>()]->RemoveComponent(id);
+        }
+
+        template<typename T>
+        std::vector<T>& GetComponentArray(){
+            return GetComponentList<T>().GetComponentArray();
         }
 
         void RemoveAllComponents(EntityID id);

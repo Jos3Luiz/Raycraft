@@ -2,7 +2,7 @@
 #include "Singleton.h"
 #include "raylib.h"
 #include "ecs/ECS.h"
-#include "ScriptSystem.h"
+#include "Script.h"
 
 namespace raycraft
 {
@@ -31,7 +31,7 @@ namespace raycraft
         T &AddScript(TArgs &&...mArgs)
         {
             ECS::Engine::instance().RegisterComponent<T>();
-            ECS::Engine::instance().RegisterSystem<RScriptSystem<T>>();
+            ECS::Engine::instance().RegisterSystem<Script<T>>();
             return ECS::Engine::instance().AddComponent<T>(id,std::forward<TArgs>(mArgs)...);
         }
 
@@ -74,7 +74,9 @@ namespace raycraft
                 ClearBackground(RAYWHITE);
 
                 ECS_engine->Update(GetFrameTime());
-
+                
+                
+                DrawFPS(0, 0);
                 EndDrawing();
             }
             CloseWindow();

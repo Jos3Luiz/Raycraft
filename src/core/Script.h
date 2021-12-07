@@ -9,10 +9,10 @@
 namespace raycraft{
 
     template<typename T>
-    class RScriptSystem : public ECS::ISystem{
+    class Script : public ECS::ISystem{
     
     public:
-        RScriptSystem(){
+        Script(){
             SignComponent<T>();
         }
         virtual void BeginPlay() override {

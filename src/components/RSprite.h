@@ -58,14 +58,14 @@ namespace raycraft
             }
         }
 
-        void Draw(Vector2 &position)
+        void Draw(float x, float y)
         {
             Rectangle source;
             source.height = tex.height;
             source.width = tex.width / len;
             source.x = source.width * textIndex;
             source.y = 0;
-            DrawTextureRec(tex, source, position, RAYWHITE);
+            DrawTextureRec(tex, source, Vector2{x,y}, RAYWHITE);
         }
 
     private:

@@ -5,15 +5,10 @@
 
 namespace raycraft{
 
-    class RTransform2 : public ECS::IComponent {
-    public:
-        Vector2 position;
-    };
-
-
     class RTransform3: public ECS::IComponent{
     public:
         Vector3 position;
+        Vector3 speed={0,0,0};
     };
 
 };
