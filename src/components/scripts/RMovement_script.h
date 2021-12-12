@@ -14,19 +14,21 @@ namespace raycraft{
         : speed(playerSpeed){}
         
         void BeginPlay(){
-            playerTransform = &ECS::Engine::instance().GetComponent<RTransform3>(parentID);
+            speedComponent = &ECS::Engine::instance().GetComponent<RSpeed>(parentID);
         }
 
         void Update(float dtime){
-            if(IsKeyDown(KEY_A)) playerTransform->position.x -= speed;
-            if(IsKeyDown(KEY_D)) playerTransform->position.x += speed;
-            if(IsKeyDown(KEY_W)) playerTransform->position.y -= speed;
-            if(IsKeyDown(KEY_S)) playerTransform->position.y += speed;
+            speedComponent->SetVelocity(Vector3{0,0,0});
+            if(IsKeyDown(KEY_A)) speedComponent->AddVelocity(Vector3{-speed,0,0});
+            if(IsKeyDown(KEY_D)) speedComponent->AddVelocity(Vector3{+speed,0,0});
+            if(IsKeyDown(KEY_W)) speedComponent->AddVelocity(Vector3{0,-speed,0});
+            if(IsKeyDown(KEY_S)) speedComponent->AddVelocity(Vector3{0,+speed,0});
+            
         }
 
     private:
         float speed;
-        RTransform3 *playerTransform;
+        RSpeed *speedComponent;
     };
 
 

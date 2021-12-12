@@ -3,7 +3,7 @@
 #include "entities/player.h"
 #include "systems/RCollisionSystem.h"
 #include "systems/RRenderSystem.h"
-
+#include "systems/RSpeedSystem.h"
 
 
 using namespace raycraft;
@@ -15,6 +15,7 @@ int main(void)
     RayCraftEngine e;  
     e.RegisterSystem<RCollisionSystem>();
     e.RegisterSystem<RRenderSystem>();
+    e.RegisterSystem<RSpeedSystem>();
 
 
     Player p1("resources/sprites/character.png",10.0f);

@@ -13,6 +13,7 @@
 #include "../Singleton.h"
 #include "Config.h"
 
+
 namespace raycraft::ECS
 {
 
@@ -101,8 +102,12 @@ namespace raycraft::ECS
         Signature sig = 0;
         Engine *engineRef = 0;
 
-        virtual void Update(float dtime) = 0;
-        virtual void BeginPlay() = 0;
+        
+        
+        virtual void Update(float dtime){};
+        virtual void UpdatePhysics(float dtime){};
+        virtual void Draw(float dtime){};
+        virtual void BeginPlay(){};
 
         void AddEntity(EntityID id);
 

@@ -1,27 +1,27 @@
 #pragma once
 
 #include "core/ecs/ECS.h"
-#include "components/RSprite.h"
+#include "components/RSpeed.h"
 #include "components/RTransform.h"
 #include <iostream>
-
+#include "utils.h"
 
 namespace raycraft{
 
-    class RRenderSystem : public ECS::ISystem{
+    class RSpeedSystem : public ECS::ISystem{
     
     public:
-        RRenderSystem(){
-            SignComponent<RSprite>();
+        RSpeedSystem(){
+            SignComponent<RSpeed>();
             SignComponent<RTransform3>();
             
         }
         virtual void BeginPlay() override {}
-        virtual void Draw(float dtime) override {
+        virtual void UpdatePhysics(float dtime) override {
             for(EntityID e : entityList){
-                RSprite& sprite = engineRef->GetComponent<RSprite>(e);
+                RSpeed& speed = engineRef->GetComponent<RSpeed>(e);
                 RTransform3& transform = engineRef->GetComponent<RTransform3>(e);
-                sprite.Draw(transform.position.x,transform.position.y);
+                transform.position=transform.position + speed.GetVelocity();
             }
         }
 

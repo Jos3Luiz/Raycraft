@@ -50,7 +50,10 @@ namespace raycraft::ECS
     {
         for (auto &sys : systemsList)
         {
+
             if(sys) sys->Update(dtime);
+            if(sys) sys->UpdatePhysics(dtime);
+            if(sys) sys->Draw(dtime);
         }
     }
 

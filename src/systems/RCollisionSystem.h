@@ -4,7 +4,9 @@
 #include "core/ecs/ECS.h"
 #include "components/RCollider.h"
 #include "components/RTransform.h"
+#include "components/RSpeed.h"
 #include "Config.h"
+#include "utils.h"
 #include <iostream>
 
 
@@ -20,7 +22,6 @@ namespace raycraft{
             engineRef->RegisterComponent<RDynamicCollider>();
             engineRef->RegisterComponent<RStaticCollider>();
         }
-        virtual void BeginPlay() override {}
         
         virtual void Update(float dtime) override {
             for(EntityID d1 : entityList){
@@ -29,7 +30,6 @@ namespace raycraft{
 
                 RDynamicCollider& d1Collider = engineRef->GetComponent<RDynamicCollider>(d1);
                 RTransform3& d1Transform = engineRef->GetComponent<RTransform3>(d1);
-
                 
                 if (DRAW_PHYSICS) DrawRectangle(d1Transform.position.x, d1Transform.position.y,
                              d1Collider.boxCollider.x, d1Collider.boxCollider.y, GREEN);   
@@ -59,25 +59,40 @@ namespace raycraft{
         }
 
         bool checkCollision(Vector3 &b1Dim,Vector3 &b1Pos,Vector3 &b2Dim,Vector3 &b2Pos,bool allowOverlap){
+            bool hasCollided;
+            float dx0,dx1,dy0,dy1,minx,miny;
+            BoundingBox b1{b1Pos,b1Pos + b1Dim};
+            BoundingBox b2{b2Pos,b2Pos + b2Dim};
 
-            if (b1Pos.x < b2Pos.x + b2Dim.x && 
-                b1Pos.x + b1Dim.x > b2Pos.x &&
-                b1Pos.y < b2Pos.y + b2Dim.y &&
-                b1Pos.y + b1Dim.y > b2Pos.y)
+
+            hasCollided = CheckCollisionBoxes(b1,b2);
+            if (hasCollided)
             {
                 if (!allowOverlap){
-                    //if on left
-                    //if(p1.x+p1.width/2 < p2.x + p2.width/2){srcPos.x = otherPos.x-src}
-                    //else
+                    dx0 = -(b2.min.x - b1.max.x); 
+                    dx1 = -(b1.min.x - b2.max.x); 
+
+                    dy0 = -(b2.min.y - b1.max.y); 
+                    dy1 = -(b1.min.y - b2.max.y); 
+
+                    minx = (dx0 < dx1) ? -dx0 : dx1 ;
+                    miny = (dy0 < dy1) ? -dy0 : dy1 ;
+
+                    if (abs(minx) < abs(miny)){
+                        b1Pos.x+=minx*1.02;
+                    }
+                    else{
+                        b1Pos.y+=miny*1.02;
+                    }
 
                 }
                 
                 if (DRAW_PHYSICS) DrawRectangle(b1Pos.x, b1Pos.y, b1Dim.x, b1Dim.y, RED);   
-                return true;
             }
-            return false;
+            return hasCollided;
             
         }
+    
 
 
 

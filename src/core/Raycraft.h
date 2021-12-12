@@ -70,6 +70,7 @@ namespace raycraft
 
             while (!WindowShouldClose()) // Detect window close button or ESC key
             {
+                
                 BeginDrawing();
                 ClearBackground(RAYWHITE);
 
