@@ -5,7 +5,14 @@
 #include "components/RSpeed.h"
 #include "components/scripts/RMovement_script.h"
 
+#include <iostream>
+
 using namespace raycraft;
+
+void looseLife(Entity a){
+    std::cout<< "collision detected " << a.GetId() << std::endl;
+}
+
 
 class Player : public Entity{
 public:
@@ -16,6 +23,7 @@ public:
         
         RDynamicCollider& d = AddComponent<RDynamicCollider>(Vector3{32,32,0});
         d.allowOverlap = false;
+        d.onOverlap.Bind(looseLife,std::placeholders::_1);
         AddScript<RMovementScript>(speed);
     }
 };

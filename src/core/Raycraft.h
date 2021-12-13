@@ -47,6 +47,7 @@ namespace raycraft
         void Destroy(){
             ECS::Engine::instance().DestroyEntity(id);
         }
+        EntityID GetId(){return id;}
     private:
         EntityID id;
     };

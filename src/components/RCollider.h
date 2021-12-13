@@ -2,8 +2,7 @@
 
 #include "raylib.h"
 #include "core/ecs/ECS.h"
-
-#include <functional>
+#include "core/Delegate.h"
 
 
 namespace raycraft{
@@ -15,6 +14,9 @@ namespace raycraft{
         Vector3 boxCollider;
         bool usePixelPerfect = false;
         bool allowOverlap = false;
+        Delegate<Entity>onOverlap;
+
+
         
     };
 

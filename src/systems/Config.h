@@ -1,3 +1,3 @@
 #pragma once
 
-constexpr bool DRAW_PHYSICS  = true;
+constexpr bool DRAW_PHYSICS  = false;

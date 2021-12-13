@@ -21,9 +21,16 @@ int main(void)
     Player p1("resources/sprites/character.png",10.0f);
 
     Player p2("resources/sprites/character.png",0.0f);
-    auto &transform = p2.GetComponent<RTransform3>();
-    transform.position.x=200;
-    transform.position.y=200;
+
+    Player p3("resources/sprites/character.png",0.0f);
+
+    auto &transform2 = p2.GetComponent<RTransform3>();
+    transform2.position.x=200;
+    transform2.position.y=200;
+
+    auto &transform3 = p3.GetComponent<RTransform3>();
+    transform3.position.x=400;
+    
 
     //e.BeginPlay();
     e.MainLoop();
