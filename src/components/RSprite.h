@@ -3,22 +3,31 @@
 #include <unordered_map>
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include "core/ecs/ECS.h"
 
 namespace raycraft
 {
 
     using TextureID = unsigned char;
-    struct TexManager
+    struct SmartTexture
     {
-        unsigned uses;
+        SmartTexture() = delete;
+        SmartTexture(const char * p,int spriteLenght): len(spriteLenght){
+            tex = LoadTexture(p);
+        }
+        ~SmartTexture(){
+            UnloadTexture(tex);
+        }
         Texture2D tex;
+        TextureID textIndex = 0;
+        unsigned len;
     };
 
     class RSprite : public ECS::IComponent
     {
     public:
-        RSprite(const char *spritePath, TextureID spriteLenght = 1) : len(spriteLenght)
+        RSprite(const char *spritePath, unsigned spriteLenght = 1)
         {
             path = std::string(spritePath);
             auto search = map.find(path);
@@ -26,54 +35,32 @@ namespace raycraft
             // if found
             if (search != map.end())
             {
-                search->second.uses++;
-                tex = search->second.tex;
-            }
-            else
-            {
-                TexManager t;
-                t.tex = LoadTexture(spritePath);
-                t.uses = 1;
-                map[path] = t;
-                tex = t.tex;
-            }
-        }
-
-        ~RSprite()
-        {
-
-            auto search = map.find(path);
-            // if found
-            if (search != map.end())
-            {
-                search->second.uses--;
-                if (search->second.uses == 0)
-                {
-                    UnloadTexture(tex);
+                texPtr = search->second.lock();
+                //if valid
+                if(texPtr){
+                    return;
                 }
             }
-            else
-            {
-                std::cout << "[ERROR]Sprite memory not found" << std::endl;
-            }
+            texPtr = std::make_shared<SmartTexture>(spritePath,spriteLenght);
+            map[path] = texPtr;            
         }
 
+    
         void Draw(float x, float y)
         {
             Rectangle source;
+            Texture2D &tex= texPtr->tex;
             source.height = tex.height;
-            source.width = tex.width / len;
-            source.x = source.width * textIndex;
+            source.width = tex.width / texPtr->len;
+            source.x = source.width * texPtr->textIndex;
             source.y = 0;
             DrawTextureRec(tex, source, Vector2{x,y}, RAYWHITE);
         }
 
     private:
-        inline static std::unordered_map<std::string, TexManager> map;
+        inline static std::unordered_map<std::string, std::weak_ptr<SmartTexture>> map;
         std::string path;
-        Texture2D tex;
-        TextureID textIndex = 0;
-        TextureID len;
+        std::shared_ptr<SmartTexture> texPtr;
     };
 
 };
