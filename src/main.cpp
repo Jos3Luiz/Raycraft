@@ -1,9 +1,11 @@
 
 #include "core/Raycraft.h"
 #include "entities/player.h"
+#include "entities/wall.h"
 #include "systems/RCollisionSystem.h"
 #include "systems/RRenderSystem.h"
 #include "systems/RSpeedSystem.h"
+#include "systems/RRigidBodySystem.h"
 
 
 using namespace raycraft;
@@ -16,20 +18,16 @@ int main(void)
     e.RegisterSystem<RCollisionSystem>();
     e.RegisterSystem<RRenderSystem>();
     e.RegisterSystem<RSpeedSystem>();
+    e.RegisterSystem<RRigidBodySystem>();
 
 
     Player p1("resources/sprites/character.png",10.0f);
 
-    Player p2("resources/sprites/character.png",0.0f);
 
-    Player p3("resources/sprites/character.png",0.0f);
+    Wall w3("resources/sprites/character.png",Vector3{200,60});
+    w3.GetComponent<RTransform3>().position.y=300;
 
-    auto &transform2 = p2.GetComponent<RTransform3>();
-    transform2.position.x=200;
-    transform2.position.y=200;
 
-    auto &transform3 = p3.GetComponent<RTransform3>();
-    transform3.position.x=400;
     
 
     //e.BeginPlay();

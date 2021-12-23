@@ -8,12 +8,12 @@
 using namespace raycraft;
 
 
-class Player : public Entity{
+class Wall : public Entity{
 public:
-    Player(const char *spritePath){
+    Wall(const char *spritePath,Vector3 dimensions){
         AddComponent<RTransform3>();
         AddComponent<RSprite>(spritePath,5);
-        AddComponent<RStaticCollider>(Vector3{400,40,0});
+        AddComponent<RStaticCollider>(dimensions);
 
     }
 };

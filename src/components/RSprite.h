@@ -13,7 +13,7 @@ namespace raycraft
     struct SmartTexture
     {
         SmartTexture() = delete;
-        SmartTexture(const char * p,int spriteLenght): len(spriteLenght){
+        SmartTexture(const char * p,TextureID spriteLenght): len(spriteLenght){
             tex = LoadTexture(p);
         }
         ~SmartTexture(){
@@ -21,15 +21,15 @@ namespace raycraft
         }
         Texture2D tex;
         TextureID textIndex = 0;
-        unsigned len;
+        TextureID len;
     };
 
     class RSprite : public ECS::IComponent
     {
     public:
-        RSprite(const char *spritePath, unsigned spriteLenght = 1)
+        RSprite(const char *spritePath, TextureID spriteLenght = 1)
         {
-            path = std::string(spritePath);
+            std::string path = std::string(spritePath);
             auto search = map.find(path);
 
             // if found
@@ -44,7 +44,6 @@ namespace raycraft
             texPtr = std::make_shared<SmartTexture>(spritePath,spriteLenght);
             map[path] = texPtr;            
         }
-
     
         void Draw(float x, float y)
         {
@@ -57,10 +56,11 @@ namespace raycraft
             DrawTextureRec(tex, source, Vector2{x,y}, RAYWHITE);
         }
 
+        std::shared_ptr<SmartTexture> texPtr;
+        
     private:
         inline static std::unordered_map<std::string, std::weak_ptr<SmartTexture>> map;
-        std::string path;
-        std::shared_ptr<SmartTexture> texPtr;
+        
     };
 
 };

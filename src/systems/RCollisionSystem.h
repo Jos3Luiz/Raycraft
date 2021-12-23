@@ -27,9 +27,22 @@ namespace raycraft
 
         virtual void Update(float dtime) override
         {
+            ECollisionDirection direction;
+
+            // Draw All static
+            if(DRAW_PHYSICS){
+                for (RStaticCollider &d3Collider : engineRef->GetComponentArray<RStaticCollider>())
+                {
+                    Entity current = Entity(d3Collider.parentID);
+                    RTransform3 &d3Transform = current.GetComponent<RTransform3>();
+                    DrawRectangle(d3Transform.position.x, d3Transform.position.y,
+                                  d3Collider.boxCollider.x, d3Collider.boxCollider.y, BLUE);
+                }
+
+            }
+            
             for (EntityID d1 : entityList)
             {
-
                 RDynamicCollider &d1Collider = engineRef->GetComponent<RDynamicCollider>(d1);
                 RTransform3 &d1Transform = engineRef->GetComponent<RTransform3>(d1);
 
@@ -49,9 +62,9 @@ namespace raycraft
                     RTransform3 &d2Transform = engineRef->GetComponent<RTransform3>(d2);
 
                     if (checkCollision(d1Collider.boxCollider, d1Transform.position,
-                                       d2Collider.boxCollider, d2Transform.position, d2Collider.allowOverlap))
+                                       d2Collider.boxCollider, d2Transform.position, d2Collider.allowOverlap,direction))
                     {
-                        d1Collider.onOverlap.Invoke(Entity(d2));
+                        d1Collider.onOverlap.Invoke(Entity(d2),direction);
                     }
                 }
 
@@ -62,20 +75,21 @@ namespace raycraft
                     RTransform3 &d3Transform = current.GetComponent<RTransform3>();
 
                     if (checkCollision(d1Collider.boxCollider, d1Transform.position,
-                                       d3Collider.boxCollider, d3Transform.position, d3Collider.allowOverlap))
+                                       d3Collider.boxCollider, d3Transform.position, d3Collider.allowOverlap,direction))
                     {
-                        d1Collider.onOverlap.Invoke(Entity(d3Collider.parentID));
+                        d1Collider.onOverlap.Invoke(Entity(d3Collider.parentID),direction);
                     }
                 }
             }
         }
 
-        bool checkCollision(Vector3 &b1Dim, Vector3 &b1Pos, Vector3 &b2Dim, Vector3 &b2Pos, bool allowOverlap)
+        bool checkCollision(Vector3 &b1Dim, Vector3 &b1Pos, Vector3 &b2Dim, Vector3 &b2Pos, bool allowOverlap,ECollisionDirection &directionOut)
         {
             bool hasCollided;
             float dx0, dx1, dy0, dy1, minx, miny;
             BoundingBox b1{b1Pos, b1Pos + b1Dim};
             BoundingBox b2{b2Pos, b2Pos + b2Dim};
+            
 
             hasCollided = CheckCollisionBoxes(b1, b2);
             if (hasCollided)
@@ -94,10 +108,12 @@ namespace raycraft
                     if (abs(minx) < abs(miny))
                     {
                         b1Pos.x += minx * 1.02;
+                        directionOut = (dx0 < dx1) ? left : right;
                     }
                     else
                     {
                         b1Pos.y += miny * 1.02;
+                        directionOut = (dy0 < dy1) ? up : down;
                     }
                 }
 

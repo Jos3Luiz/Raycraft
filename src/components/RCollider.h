@@ -6,6 +6,8 @@
 
 
 namespace raycraft{
+
+    typedef enum{up,down,left,right}ECollisionDirection;
     
 
     class RStaticCollider : public ECS::IComponent {
@@ -14,7 +16,7 @@ namespace raycraft{
         Vector3 boxCollider;
         bool usePixelPerfect = false;
         bool allowOverlap = false;
-        Delegate<Entity>onOverlap;
+        Delegate<Entity,ECollisionDirection&>onOverlap;
 
 
         
