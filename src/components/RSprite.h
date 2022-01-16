@@ -20,7 +20,6 @@ namespace raycraft
             UnloadTexture(tex);
         }
         Texture2D tex;
-        TextureID textIndex = 0;
         TextureID len;
     };
 
@@ -51,15 +50,25 @@ namespace raycraft
             Texture2D &tex= texPtr->tex;
             source.height = tex.height;
             source.width = tex.width / texPtr->len;
-            source.x = source.width * texPtr->textIndex;
+            source.x = source.width * textIndex;
             source.y = 0;
             DrawTextureRec(tex, source, Vector2{x,y}, RAYWHITE);
+        }
+
+        void nextIndex(){
+            textIndex = (textIndex+1)%texPtr->len;
+        }
+        
+        void setIndex(TextureID idx){
+            assert(idx<texPtr->len && "texture index should be less than size of sprite");
+            textIndex = idx;
         }
 
         std::shared_ptr<SmartTexture> texPtr;
         
     private:
         inline static std::unordered_map<std::string, std::weak_ptr<SmartTexture>> map;
+        TextureID textIndex = 0;
         
     };
 

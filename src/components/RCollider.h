@@ -19,7 +19,6 @@ namespace raycraft{
         Delegate<Entity,ECollisionDirection&>onOverlap;
 
 
-        
     };
 
 

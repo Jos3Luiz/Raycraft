@@ -1,5 +1,4 @@
-FILES = src/main.cpp \
-		src/core/ecs/ECS.cpp 
+FILES = src/main.cpp 
 
 
 all: 

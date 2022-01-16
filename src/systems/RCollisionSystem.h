@@ -64,7 +64,7 @@ namespace raycraft
                     if (checkCollision(d1Collider.boxCollider, d1Transform.position,
                                        d2Collider.boxCollider, d2Transform.position, d2Collider.allowOverlap,direction))
                     {
-                        d1Collider.onOverlap.Invoke(Entity(d2),direction);
+                        d1Collider.onOverlap.Invoke(Entity(d1),direction);
                     }
                 }
 
@@ -77,7 +77,7 @@ namespace raycraft
                     if (checkCollision(d1Collider.boxCollider, d1Transform.position,
                                        d3Collider.boxCollider, d3Transform.position, d3Collider.allowOverlap,direction))
                     {
-                        d1Collider.onOverlap.Invoke(Entity(d3Collider.parentID),direction);
+                        d1Collider.onOverlap.Invoke(Entity(d1),direction);
                     }
                 }
             }
@@ -119,6 +119,8 @@ namespace raycraft
 
                 if (DRAW_PHYSICS)
                     DrawRectangle(b1Pos.x, b1Pos.y, b1Dim.x, b1Dim.y, RED);
+                
+
             }
             return hasCollided;
         }
